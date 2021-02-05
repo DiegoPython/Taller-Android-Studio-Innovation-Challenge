@@ -80,6 +80,17 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
     }
 
+    public Cursor getUserData(String nombre)
+    {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COL_2 + " = '" + nombre + "'";
+
+        Cursor data = db.rawQuery(query, null);
+        return data;
+
+    }
+
     public Cursor getUserData(int id)
     {
 
@@ -105,7 +116,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
     {
 
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "DELETE FROM " + TABLE_NAME + " WHERE " + COL_1 + " = '" + id + "' AND " + COL_2 + " = '" + nombre + "'";
+        String query = "DELETE FROM " + TABLE_NAME + " WHERE " + COL_1 + " = '" + id + "', " + COL_2 + " = '" + nombre + "' AND " +  COL_7 + " = '" + sangre + "'";
 
         db.execSQL(query);
 

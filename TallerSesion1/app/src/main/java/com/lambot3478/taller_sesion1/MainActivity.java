@@ -2,6 +2,7 @@ package com.lambot3478.taller_sesion1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,16 +26,21 @@ public class MainActivity extends AppCompatActivity {
     private RadioGroup opcionesSexo;
 
     private Button buttonGuardar;
+    private Button buttonUsers;
 
     private Spinner opcionesSangre;
 
     private String sexo = null;
     private String sangre = null;
 
+    DatabaseHelper databaseHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        databaseHelper = new DatabaseHelper(this);
 
         editTextNombre = findViewById(R.id.editTextName);
         editTextAltura = findViewById(R.id.editTextAltura);
@@ -44,9 +50,10 @@ public class MainActivity extends AppCompatActivity {
 
         opcionesSexo = findViewById(R.id.radioGroupSexo);
 
-        opcionesSangre = findViewById(R.id.spinnerSangre);
+        opcionesSangre= findViewById(R.id.spinnerSangre);
 
         buttonGuardar = findViewById(R.id.buttonGuardar);
+        buttonUsers = findViewById(R.id.buttonUsers);
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.tiposSangre));
@@ -61,6 +68,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 guardarDatos();
+            }
+        });
+
+        buttonUsers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent usersIntent = new Intent(MainActivity.this, UserTable.class);
+                startActivity(usersIntent);
             }
         });
 
@@ -150,7 +165,20 @@ public class MainActivity extends AppCompatActivity {
             toastMessage("Por favor, llena el campo de pronombre");
 
         else
-            toastMessage("Nombre: " + nombre + "\nAltura: " + altura + "\nEdad: " + edad + "\nPeso: " + peso + "\nPronombre: " + pronombre + "\nSexo: " + sexo + "\nSangre: " + sangre);
+            addData(nombre, edad, altura, peso, sexo, sangre, pronombre);//toastMessage("Nombre: " + nombre + "\nAltura: " + altura + "\nEdad: " + edad + "\nPeso: " + peso + "\nPronombre: " + pronombre + "\nSexo: " + sexo + "\nSangre: " + sangre);
+
+    }
+
+    private void addData(String nombre, int edad, double altura, double peso, String sexo, String sangre, String pronombre)
+    {
+
+        boolean insertData = databaseHelper.addData(nombre, edad, altura, peso, sexo, sangre, pronombre);
+
+        if(insertData)
+            toastMessage("Usuario agregado!");
+
+        else
+            toastMessage("Error: Algo salio mal :(");
 
     }
 
